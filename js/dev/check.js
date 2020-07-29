@@ -54,7 +54,7 @@ var checkIt = function () {
 				switchPane("win-resolve");
 				top.postMessage({"type": "loadstage", "from": "check", "loadstage": "ok"}, "*")
 				new Promise (function (p) {
-					// location.href = "main.htm";
+					location.href = "main.htm";
 					p();
 				});
 			};
