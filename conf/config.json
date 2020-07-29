@@ -1,6 +1,22 @@
 {
-	"group": [
-		336925909
-	],
-	"default": 0
+	"group": {
+		"list": [
+			336925909
+		],
+		"default": 0,
+		"allowCustom": true
+	},
+	"username": {
+		"allowCustom": true,
+		"randomizer": {
+			"map": "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_",
+			"length": 12
+		}
+	},
+	"server": {
+		"remote": "wss://albertincx-telechat-1.glitch.me/",
+		"protocol": "safiullin",
+		"greetOnJoin": false,
+		"byeOnLeave": false
+	}
 }
