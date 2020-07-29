@@ -1,5 +1,5 @@
-# WApp Upstream
-The base of all Project Webcirque apps.
+# WebFly
+Whole new implementation of Safiullin's Cafechat.app
 
 ## Status
 
