@@ -5,6 +5,14 @@ var walterna = [];
 if (!Array.prototype.indexOf) {
 	walterna.push("noIndexOf");
 };
+// Looping functions made easy
+try {
+	Function.prototype.repeat = function (times) {
+		for (var c = 0; c < times; c ++) {
+			this();
+		};
+	};
+} catch (err) {};
 // If a number has...
 Number.prototype.inside = function (maxRange) {
 	return (this % maxRange + maxRange) % maxRange;

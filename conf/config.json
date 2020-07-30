@@ -6,7 +6,7 @@
 		"default": 0,
 		"allowCustom": true
 	},
-	"username": {
+	"user": {
 		"allowCustom": true,
 		"randomizer": {
 			"map": "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_",
@@ -18,5 +18,11 @@
 		"protocol": "safiullin",
 		"greetOnJoin": false,
 		"byeOnLeave": false
+	},
+	"info": {
+		"realPath": false,
+		"fakePath": "/index.html",
+		"realHost": false,
+		"fakeHost": "cafechat.app"
 	}
 }

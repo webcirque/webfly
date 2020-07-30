@@ -52,11 +52,10 @@ var checkIt = function () {
 			};
 			default : {
 				switchPane("win-resolve");
-				top.postMessage({"type": "loadstage", "from": "check", "loadstage": "ok"}, "*")
-				new Promise (function (p) {
+				top.postMessage({"type": "loadstage", "from": "check", "loadstage": "ok"}, "*");
+				setTimeout(function () {
 					location.href = "main.htm";
-					p();
-				});
+				}, 500);
 			};
 		};
 	} else {
@@ -79,7 +78,7 @@ document.addEventListener("readystatechange", function () {
 							Array.from(document.querySelectorAll(".loader-webcirque")).forEach((e, i) => {
 								e.style.animation = "loadin 1s linear infinite"
 							});
-							setTimeout(checkIt, 1250);
+							setTimeout(checkIt, 550);
 							break;
 						};
 					};
