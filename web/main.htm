@@ -3,7 +3,7 @@
 	<meta http-equiv="200" charset="utf-8" />
 	<link rel="shortcut icon" href="img/picon/webfly.svg" />
 	<link rel="stylesheet" href="../css/loader/global.css" />
-	<link rel="stylesheet" href="../css/loader/init.css" />
+	<link rel="stylesheet" href="../css/dev/interface.css" />
 	<title>WebFly</title>
 	<script src="../libs/websf@webcirque/main.alter.js"></script>
 	<script src="../libs/websf@webcirque/main.wenv.js"></script>
@@ -13,4 +13,48 @@
 	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
 </head>
 <body>
+	<table class="expanding">
+		<tr style="height: 36px;">
+			<td class="disp-drawer" rowspan="2">
+				<table class="expanding">
+					<tr>
+						<td class="expanding" style="text-align: left; vertical-align: top;">
+							<ul id="disp-grouplist">
+								<li class="active">Start Tab</li>
+								<li>Options</li>
+							</ul>
+						</td>
+					</tr>
+					<tr style="height: 32px">
+						<td>
+							<table class="disp-uid expanding">
+								<tr style="height: 24px;">
+									<td style="width: 24px;" id="btn-settings"></td>
+									<td style="width: 24px;" id="btn-addchat"></td>
+									<td id="var-userid">TestUserNaiveToadElder</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td class="disp-ctitle">
+				<table class="expanding">
+					<tr>
+						<td style="width: 32px;" id="btn-settings"></td>
+						<td id="var-title">Welcome to WebFly</td>
+						<td style="width: 32px;" id="btn-settings"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="disp-content">
+				<div class="disp-tab">
+					<table class="expanding"></table>
+				</div>
+				<div class="disp-tab inactive-disp"></div>
+			</td>
+		</tr>
+	</table>
 </body>

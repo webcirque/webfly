@@ -1,7 +1,10 @@
 {
 	"group": {
 		"list": [
-			336925909
+			{
+				"id": 336925909,
+				"name": "InstantChatBot Default"
+			}
 		],
 		"default": 0,
 		"allowCustom": true
@@ -20,9 +23,9 @@
 		"byeOnLeave": false
 	},
 	"info": {
-		"realPath": false,
+		"realPath": true,
 		"fakePath": "/index.html",
-		"realHost": false,
+		"realHost": true,
 		"fakeHost": "cafechat.app"
 	}
 }

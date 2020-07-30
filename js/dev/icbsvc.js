@@ -54,28 +54,42 @@ var ICBSvc = function (groupId, userId, config, receiver, options = {}) {
 		};
 	};
 	var msgHandler = function (event) {
-		try {
-			var msgJson = JSON.parse(event.data);
-			switch (msgJson.service) {
-				case "lastmes": {
-					msgJson.lastMess.forEach(function (e) {
-						if (e.isRec) {
-							upThis.history.push(new ICBMsg(
-								e.uid, e.message, e._id, new Date(e.createdAt), new Date(e.updatedAt)
-							));
-						};
-					});
-					break;
+		if (event.data.indexOf("{") == 0) {
+			try {
+				var msgJson = JSON.parse(event.data);
+				switch (msgJson.service) {
+					case "lastmes": {
+						msgJson.lastMess.forEach(function (e) {
+							if (e.message.indexOf(upThis.userId + " ") != 0) {
+								upThis.history.push(new ICBMsg(
+									e.uid, e.message, e._id, new Date(e.createdAt), new Date(e.updatedAt)
+								));
+							};
+						});
+						event.target.send(JSON.stringify({
+							"message": (upThis.userId + " joined the chat via WebFly.\nPrimary language: " + navigator.language),
+							"host": upThis.host,
+							"pathname": upThis.path,
+							"g": upThis.groupId.toString(),
+							"uid": upThis.userId,
+							"isRec": true
+						}));
+						break;
+					};
+					case "setUid": {
+						//
+						break;
+					};
+					default : {
+						console.warn("Unknown service: %o", msgJson);
+					};
 				};
-				case "setUid": {
-					//
-					break;
-				};
-				default : {
-					console.warn("Unknown service: %o", msgJson);
-				};
+			} catch (err) {
+				var tsp = new Date();
+				upThis.receiver({sender: "Unknown Remote", msg: event.data});
+				upThis.history.push(new ICBMsg("Unknown Remote", event.data, genRandom(24), tsp, tsp));
 			};
-		} catch (err) {
+		} else {
 			var tsp = new Date();
 			upThis.receiver({sender: "Unknown Remote", msg: event.data});
 			upThis.history.push(new ICBMsg("Unknown Remote", event.data, genRandom(24), tsp, tsp));
@@ -97,14 +111,6 @@ var ICBSvc = function (groupId, userId, config, receiver, options = {}) {
 					"pathname": upThis.path,
 					"g": upThis.groupId.toString(),
 					"uid": upThis.userId
-				}));
-				ev.target.send(JSON.stringify({
-					"message": (upThis.userId + " joined the chat via WebFly.\nPrimary language: " + navigator.language),
-					"host": upThis.host,
-					"pathname": upThis.path,
-					"g": upThis.groupId.toString(),
-					"uid": upThis.userId,
-					"isRec": false
 				}));
 			});
 			this.socket.addEventListener("message", msgHandler);
@@ -135,7 +141,7 @@ var ICBSvc = function (groupId, userId, config, receiver, options = {}) {
 		upThis.socket.addEventListener("open", function () {
 			console.log("Reconnected");
 		});
-		upThis.socket.addEventListener("close", function (ev) {
+		upThis.socket.addEventListener("error", function (ev) {
 			console.log("Reconnection failed. Details: %o", ev);
 		});
 		upThis.socket.addEventListener("message", msgHandler);

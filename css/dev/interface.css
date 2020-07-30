@@ -1,0 +1,59 @@
+.inactive-disp {
+	display: none;
+}
+div, td {
+	cursor: default;
+}
+
+table.expanding, td.expanding {
+	margin: 0;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	border: none;
+}
+table.expanding > tbody, table.expanding > tbody > tr, table.expanding > tbody > tr > td {
+	/* padding: 0; */
+	margin: 0;
+	border-spacing: 0;
+	border: none;
+}
+
+td.disp-drawer {
+	width: 256px;
+	background: rgba(255, 255, 255, 0.16);
+}
+div.disp-tab {
+	background: rgba(255, 255, 255, 0.08);
+	width: 100%;
+	height: 100%;
+}
+td.disp-ctitle {
+	background: rgba(255, 255, 255, 0.12);
+	font-size: 20px;
+	font-weight: 700;
+}
+td.disp-ctitle #var-title {
+	padding: 0px 3px 4px !important;
+}
+table.disp-uid {
+	background: rgba(255, 255, 235, 0.12);
+	padding: 2px;
+}
+#disp-grouplist {
+	list-style-type: none;
+	padding: 4px;
+	margin: 0;
+}
+#disp-grouplist > li {
+	border: 0 solid;
+	border-radius: 2px;
+	padding: 2px;
+	font-size: 14px;
+}
+#disp-grouplist > li.active {
+	background: rgba(255, 255, 255, 0.8);
+	color: #000;
+}

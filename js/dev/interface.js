@@ -11,12 +11,23 @@ var setUid = function (uid) {
 };
 var webfly;
 getConfig().then(function () {
-	// Debugging
+});
+
+// Basic
+var startThis = function (gid = appConfig.group.list[appConfig.group.default].id) {
 	var lastUid = localStorage.getItem("WebFly:userId") || genRandom(appConfig.user.randomizer.length, appConfig.user.randomizer.map);
-	webfly = new ICBSvc(appConfig.group.list[appConfig.group.default], lastUid, appConfig);
+	webfly = new ICBSvc(gid, lastUid, appConfig);
 	setUid(lastUid);
 	webfly.start();
 	addEventListener("beforeunload", function () {
 		webfly.close();
 	});
+};
+
+// Window
+var drawerDisp, chatDisp;
+document.addEventListener("readystatechange", function () {
+	if (this.readyState == "interactive") {
+
+	};
 });
