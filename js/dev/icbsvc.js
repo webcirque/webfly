@@ -2,9 +2,10 @@
 
 var genRandom = function (length, defMap = "0123456789ABCDEF") {
 	var result = "";
-	(function () {
+	var tmpFunc = function () {
 		result += defMap[Math.floor(Math.random() * defMap.length)];
-	}).repeat(length);
+	}
+	tmpFunc.repeat(length);
 	return result;
 };
 var ICBMsg = function (user, msg, id, iniTime, modTime) {
