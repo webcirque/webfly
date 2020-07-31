@@ -37,6 +37,7 @@ Minimum length of a valid username. A value above 5 is recommended.
 ##### ```maxLength```
 Maximum length of a valid username. A value below 21 is strongly recommended.
 ##### ```randomizer {}```
+Tells the client how to generate a username.
 ###### ```map```
 All of the characters that is allowed to show up in a randomly-generated username.
 ###### ```length```
@@ -54,4 +55,12 @@ If set to true, the client will send an greeting message to the remote upon join
 ##### ```byeOnLeave```
 If set to true, the client will send an greeting message to the remote upon leaving. Invisible on the client-side GUI.
 #### ```info {}```
-Control what users send to the remote bridge server.
+Control what extra information will users send to the remote bridge server.
+##### realPath
+Whether the real path of the client's URL will be sent to the remote server.
+##### fakePath
+What will the client send to the remote server instead of the real one if ```realPath``` is set to ```false```.
+##### realHost
+Whether the real domain which hosts the client will be sent to the remote server.
+##### fakeHost
+What will the client send to the remote server instead of the real one if ```realHost``` is set to ```false```.
