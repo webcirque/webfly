@@ -14,13 +14,15 @@
 		"randomizer": {
 			"map": "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_",
 			"length": 12
-		}
+		},
+		"minLength": 6,
+		"maxLength": 18
 	},
 	"server": {
 		"remote": "wss://albertincx-telechat-1.glitch.me/",
 		"protocol": "safiullin",
-		"greetOnJoin": false,
-		"byeOnLeave": false
+		"greetOnJoin": true,
+		"byeOnLeave": true
 	},
 	"info": {
 		"realPath": true,
