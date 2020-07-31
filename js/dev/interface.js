@@ -1,7 +1,7 @@
 "use strict";
 
 // Initialize
-var btns = {}, panes = {}, tabs = {};
+var btns = {}, panes = {}, tabs = {}, vartext = {};
 
 // Read config
 var getConfig = async function () {
@@ -26,6 +26,7 @@ var startThis = function (gid = appConfig.group.list[appConfig.group.default].id
 	var lastUid = localStorage.getItem("WebFly:userId") || genRandom(appConfig.user.randomizer.length, appConfig.user.randomizer.map);
 	webfly = new ICBSvc(gid, lastUid, appConfig);
 	setUid(lastUid);
+	updVartext();
 	webfly.start();
 	addEventListener("beforeunload", function () {
 		webfly.close();
@@ -35,6 +36,7 @@ var startThis = function (gid = appConfig.group.list[appConfig.group.default].id
 var uiRefresher = function () {
 	updButtons();
 	eleResize();
+	updVartext();
 };
 // Force button sizes
 var updButtons = function () {
@@ -47,7 +49,18 @@ var updButtons = function () {
 };
 // Resize elements
 var eleResize = function () {
-	panes.activity.style.width = (innerWidth - panes.drawer.clientWidth).toString() + "px";
+	if (innerWidth > 560) {
+		panes.drawer.style.width = "";
+		panes.activity.style.width = (innerWidth - panes.drawer.clientWidth).toString() + "px";
+	} else {
+		panes.drawer.style.width = (innerWidth - 40).toString() + "px";
+		panes.activity.style.width = innerWidth.toString() + "px"
+	};
+};
+// Update Vartexts
+var updVartext = function () {
+	var lastUid = localStorage.getItem("WebFly:userId") || genRandom(appConfig.user.randomizer.length, appConfig.user.randomizer.map);
+	vartext.uidDisp.innerText = lastUid;
 };
 
 // Window
@@ -59,6 +72,7 @@ document.addEventListener("readystatechange", function () {
 			uiRefresher();
 			addEventListener("resize", function () {
 				eleResize();
+				updVartext();
 			});
 		});
 		// Get elements
@@ -67,6 +81,8 @@ document.addEventListener("readystatechange", function () {
 		// Panes
 		panes.drawer = document.querySelector(".disp-drawer");
 		panes.activity = document.querySelector(".disp-activity");
+		// Variable GUI elements
+		vartext.uidDisp = document.querySelector("#var-userid");
 		// Add event listeners
 		btns.listDrawer.addEventListener("mouseup", function () {
 			if (panes.drawer.className == "disp-drawer expanding style-flex-c") {

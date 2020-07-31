@@ -51,9 +51,13 @@ The protocol of the bridge.
 
 * ```safiullin```: The protocol used by InstantChatBot
 ##### ```greetOnJoin```
-If set to true, the client will send an greeting message to the remote upon join. Invisible on the client-side GUI.
+If set to true, the client will send a greeting message to the remote upon join. Invisible on the client-side GUI.
+
+It is recommended to leave this option on, which will let you know if there is someone coming, and respond to them first.
 ##### ```byeOnLeave```
-If set to true, the client will send an greeting message to the remote upon leaving. Invisible on the client-side GUI.
+If set to true, the client will send a message to the remote upon leaving. Invisible on the client-side GUI.
+
+It is recommended to leave this option on, which will let you know if someone has left.
 #### ```info {}```
 Control what extra information will users send to the remote bridge server.
 ##### realPath

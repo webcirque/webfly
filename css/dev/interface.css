@@ -45,8 +45,17 @@ table.expanding > tbody, table.expanding > tbody > tr, table.expanding > tbody >
 }
 
 div.disp-drawer {
-	width: 280px !important;
+	width: 280px;
 	background: rgba(255, 255, 255, 0.16);
+}
+@media (max-width: 560px) {
+	div[class='float-left expanding'] > * {
+		float: none;
+	}
+	div.disp-drawer {
+		position: absolute;
+		left: 40px;
+	}
 }
 div.disp-tab {
 	background: rgba(255, 255, 255, 0.08);
@@ -70,7 +79,7 @@ div.disp-ctitle #var-title {
 div.disp-uid {
 	background: rgba(255, 255, 235, 0.12);
 	border: 0 solid;
-	border-radius: 2px;
+	border-radius: 16px;
 	height: 32px;
 }
 div.disp-uid div {
@@ -78,6 +87,9 @@ div.disp-uid div {
 }
 div.disp-uid div > img {
 	margin: 4px;
+}
+div.disp-uid div#btn-settings {
+	margin-left: 4px;
 }
 div.disp-uid div[id^=btn] {
 	width: 28px;
