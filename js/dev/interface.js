@@ -37,13 +37,17 @@ var eleResize = function () {
 		panes.activity.style.width = (innerWidth - panes.drawer.clientWidth).toString() + "px";
 	} else {
 		panes.drawer.style.width = (innerWidth - 40).toString() + "px";
-		panes.activity.style.width = innerWidth.toString() + "px"
+		panes.activity.style.width = innerWidth.toString() + "px";
 	};
 };
 // Update Vartexts
 var updVartext = function () {
-	var lastUid = localStorage.getItem("WebFly:userId") || genRandom(appConfig.user.randomizer.length, appConfig.user.randomizer.map);
+	var lastUid = localStorage.getItem("WebFly:userId");
+	if (+lastUid == 0) {
+		lastUid = genRandom(appConfig.user.randomizer.length, appConfig.user.randomizer.map);
+	};
 	vartext.uidDisp.innerText = lastUid;
+	localStorage.setItem("WebFly:userId", lastUid);
 };
 // Switch tabs
 var switchTo = function (that) {
@@ -84,14 +88,6 @@ var addGroup = function (id, name) {
 var drawerDisp, chatDisp;
 document.addEventListener("readystatechange", function () {
 	if (this.readyState == "interactive") {
-		getIcons().then(function () {
-			wimgr.updateIconsAll();
-			uiRefresher();
-			addEventListener("resize", function () {
-				eleResize();
-				updVartext();
-			});
-		});
 		// Get elements
 		// Buttons
 		btns.listDrawer = document.querySelector("#btn-drawer");
@@ -119,7 +115,16 @@ document.addEventListener("readystatechange", function () {
 			});
 		});
 		// International
+		// Config
 		getConfig().then(function () {
+			getIcons().then(function () {
+				wimgr.updateIconsAll();
+				uiRefresher();
+				addEventListener("resize", function () {
+					eleResize();
+					updVartext();
+				});
+			});
 			// Load all groups
 			appConfig.group.list.forEach(function (e) {
 				addGroup(e.id, e.name);
