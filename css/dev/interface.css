@@ -44,6 +44,12 @@ table.expanding > tbody, table.expanding > tbody > tr, table.expanding > tbody >
 	border: none;
 }
 
+iframe.intab {
+	border: none;
+	width: 100%;
+	height: 100%;
+}
+
 div.disp-drawer {
 	width: 280px;
 	background: rgba(255, 255, 255, 0.16);

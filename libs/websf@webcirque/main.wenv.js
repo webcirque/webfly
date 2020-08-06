@@ -34,6 +34,12 @@ var WEnv = function () {
 		self;
 		this._features.push("self");
 	} catch (err) {};
+	// Worker?
+	try {
+		if (self.importScripts) {
+			this._features.push("importScripts");
+		};
+	} catch (err) {}
 	// Basic polyfills for window and self
 	if (!(this._features.withAnyd("self"))) {
 		window.self = window;
@@ -133,16 +139,26 @@ var WEnv = function () {
 		};
 	};
 	// If Font Variation Settings exist (Chrome 62)
+	// display: minimal-ui (Chrome 80)
 	if (this._features.withAlld("cssApi", "cssSupports")) {
 		if (CSS.supports("font-variation-settings", "'wght' 700")) {
 			this._features.push("fontVarConf");
 		};
+		if (CSS.supports("display", "minimal-ui")) {
+			this._features.push("dispMinUI");
+		};
 	};
 	// Intl.PluralRules? (Chrome 63, Firefox 58)
+	// DisplayNames? (Chrome 81, Firefox not yet)
 	if (this._features.withAlld("intlApi")) {
 		if (Intl.PluralRules) {
 			if (Intl.PluralRules.constructor == Function) {
 				this._features.push("intlPluralRules");
+			};
+		};
+		if (Intl.DisplayNames) {
+			if (Intl.DisplayNames.constructor == Function) {
+				this._features.push("intlDispNames");
 			};
 		};
 	};
@@ -163,14 +179,10 @@ var WEnv = function () {
 		if (navigator.clipboard) {
 			this._features.push("navClipboard");
 			if (navigator.clipboard.readText) {
-				if (navigator.clipboard.readText.constructor == Function) {
-					this._features.push("navClipboardRead");
-				};
+				this._features.push("navClipboardRead");
 			};
 			if (navigator.clipboard.writeText) {
-				if (navigator.clipboard.writeText.constructor == Function) {
-					this._features.push("navClipboardWrite");
-				};
+				this._features.push("navClipboardWrite");
 			};
 		};
 	};
@@ -262,12 +274,6 @@ var WEnv = function () {
 		};
 	};
 	var tmpArray = undefined;
-	// display: minimal-ui (Chrome 80)
-	if (this._features.withAlld("cssApi", "cssSupports")) {
-		if (CSS.supports("display", "minimal-ui")) {
-			this._features.push("dispMinUI");
-		};
-	};
 	// Optional Chaining (Chrome 80, Firefox 74)
 	try {
 		if (this._features.withAlld("a2b")) {
@@ -276,14 +282,6 @@ var WEnv = function () {
 			};
 		};
 	} catch (err) {};
-	// DisplayNames? (Chrome 81, Firefox not yet)
-	if (this._features.withAlld("intlApi")) {
-		if (Intl.DisplayNames) {
-			if (Intl.DisplayNames.constructor == Function) {
-				this._features.push("intlDispNames");
-			};
-		};
-	};
 	// There are no Chrome 82!
 	// Shape Detection API
 	if (Compard.able(self.FaceDetector, self.BarcodeDetector, self.TextDetector) > 0) {
@@ -626,7 +624,7 @@ var WEnv = function () {
 			};
 		};
 		// 360 Chromium fingerprints
-		if ((mimeTypes.indexOf("application/360softmgrplugin") > -1) || (mimeTypes.indexOf("application/mozilla-npqihooquicklogin") > -1) || (this.version[0] > 45 && mimeTypes.indexOf("application/vnd.chromium.remoting-viewer") > -1) || (this.version[0] > 58 && mimeTypes.indexOf("application/asx") > -1) || (this.version[0] > 36 && self.showModalDialog)) {
+		if (mimeTypes.withAnyd("application/360softmgrplugin", "application/mozilla-npqihooquicklogin", "application/vnd.chromium.remoting-viewer", "application/asx") || (this.version[0] > 36 && self.showModalDialog)) {
 			this.moddedName = "360";
 			this.moddedFrom = "cn";
 			this.modded = true;

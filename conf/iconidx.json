@@ -36,6 +36,16 @@
 		{
 			"id": "stop",
 			"src": "feather/stop.svg"
+		},
+		{
+			"id": "send",
+			"src": "feather/send.svg",
+			"size": "~s"
+		},
+		{
+			"id": "attachment",
+			"src": "feather/paperclip.svg",
+			"size": "~s"
 		}
 	]
 }

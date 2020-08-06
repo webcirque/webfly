@@ -28,14 +28,12 @@ Number.prototype.within = function (min, max) {
 // Primitive compatibility layer for array
 Array.from = Array.from || function (target) {
 	var ans = [];
-	if (target.length) {
-		if (target.length >= 0) {
-			for (var pt = 0; pt < target.length; pt ++) {
-				ans.push(target[pt]);
-			};
-		} else {
-			throw Error("Illegal length");
+	if (target.length >= 0) {
+		for (var pt = 0; pt < target.length; pt ++) {
+			ans.push(target[pt]);
 		};
+	} else {
+		throw Error("Illegal length");
 	};
 	return ans;
 };
@@ -75,6 +73,7 @@ Array.prototype.lastIndexOf = Array.prototype.lastIndexOf || function (del) {
 		for (var pt = 0; pt < this.length; pt ++) {
 			if (this[pt] == del) {
 				ans = pt;
+				break;
 			};
 		};
 	};
@@ -188,6 +187,80 @@ String.prototype.withAlld = function () {
 	return (this.withCount(arguments) == arguments.length);
 };
 String.prototype.formText = function (map) {};
+
+// Why not use FileReader to polyfill .arrayBuffer and .text ?
+try {
+	Blob.prototype.get = function (type) {
+		var upThis = this, type = type || "";
+		return new Promise(function (p, r) {
+			var reader = new FileReader();
+			reader.onabort = function (event) {
+				r(event);
+			};
+			reader.onerror = function (event) {
+				r(event);
+			};
+			reader.onload = function (event) {
+				p(event.target.result);
+			};
+			switch (type.toLowerCase()) {
+				case "arraybuffer":
+				case "arrbuff": {
+					reader.readAsArrayBuffer(upThis);
+					break;
+				};
+				case "text":
+				case "atext":
+				case "str":
+				case "string": {
+					reader.readAsText(upThis);
+					break;
+				};
+				case "bintext":
+				case "binstr":
+				case "binarystring": {
+					reader.readAsBinaryString(upThis);
+					break;
+				};
+				case "dataurl": {
+					reader.readAsDataURL(upThis);
+				};
+				default : {
+					throw TypeError("Unsupported type");
+				};
+			};
+		});
+	};
+	Blob.prototype.text = Blob.prototype.text || function () {
+		return this.get("str");
+	};
+	Blob.prototype.unicodeText = function () {
+		return this.get("str");
+	};
+	Blob.prototype.arrayBuffer = Blob.prototype.arrayBuffer || function () {
+		return this.get("arrbuff");
+	};
+	Blob.prototype.binaryString = function () {
+		return this.get("binstr");
+	};
+	Blob.prototype.dataURL = function () {
+		return this.get("dataurl");
+	};
+	Blob.prototype.getURL = function () {
+		var url = this.objectURL || URL.createObjectURL(this);
+		this.objectURL = url;
+		return url;
+	};
+	Blob.prototype.revokeURL = function () {
+		if (this.objectURL) {
+			URL.revokeObjectURL(this);
+			this.objectURL = undefined;
+		} else {
+			throw (new Error("Not registered"));
+		};
+	};
+} catch (err) {};
+
 /* function wAlter (text, map) {
 	let wtAr = Array.from(text);
 	let wlist = [];

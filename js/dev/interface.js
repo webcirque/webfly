@@ -1,7 +1,7 @@
 "use strict";
 
 // Initialize
-var btns = {}, panes = {}, tabs = {}, vartext = {};
+var btns = {}, panes = {}, tabs = {}, vartext = {}, groups = [];
 
 // Read config
 var getConfig = async function () {
@@ -13,25 +13,8 @@ var getIcons = async function () {
 	var iconConfig = await resp.json();
 	self.wimgr = new IconMgr("../img/", iconConfig);
 };
-var setUid = function (uid) {
-	localStorage.setItem("WebFly:userId", uid);
-	webfly.userId = uid;
-};
 var webfly;
-getConfig().then(function () {
-});
 
-// Basic
-var startThis = function (gid = appConfig.group.list[appConfig.group.default].id) {
-	var lastUid = localStorage.getItem("WebFly:userId") || genRandom(appConfig.user.randomizer.length, appConfig.user.randomizer.map);
-	webfly = new ICBSvc(gid, lastUid, appConfig);
-	setUid(lastUid);
-	updVartext();
-	webfly.start();
-	addEventListener("beforeunload", function () {
-		webfly.close();
-	});
-};
 // Refresh all elements on resize
 var uiRefresher = function () {
 	updButtons();
@@ -62,6 +45,40 @@ var updVartext = function () {
 	var lastUid = localStorage.getItem("WebFly:userId") || genRandom(appConfig.user.randomizer.length, appConfig.user.randomizer.map);
 	vartext.uidDisp.innerText = lastUid;
 };
+// Switch tabs
+var switchTo = function (that) {
+	var idx = Array.from(panes.groupList.children).indexOf(that), kidx = idx;
+	if (kidx > 0) {
+		kidx -= 1;
+	};
+	Array.from(panes.content.children).forEach(function (e, i) {
+		(i == kidx) ? e.className = "disp-tab" : e.className = "disp-tab inactive-disp";
+	});
+	Array.from(panes.groupList.children).forEach(function (e, i) {
+		if (i == idx) {
+			e.className = "active";
+			vartext.titleDisp.innerText = e.innerText;
+		} else {
+			e.className = "";
+		};
+	});
+};
+var addGroup = function (id, name) {
+	groups.push({id: id, name: name});
+	var elem = document.createElement("li");
+	elem.innerText = name;
+	elem.addEventListener("click", function () {
+		switchTo(this);
+	});
+	var tabd = document.createElement("div");
+	tabd.className = "disp-tab inactive-disp";
+	var ifra = document.createElement("iframe");
+	ifra.className = "intab";
+	ifra.src = "chat.htm?id=" + id.toString();
+	tabd.appendChild(ifra);
+	panes.content.appendChild(tabd);
+	panes.groupList.appendChild(elem);
+};
 
 // Window
 var drawerDisp, chatDisp;
@@ -81,8 +98,11 @@ document.addEventListener("readystatechange", function () {
 		// Panes
 		panes.drawer = document.querySelector(".disp-drawer");
 		panes.activity = document.querySelector(".disp-activity");
+		panes.groupList = document.querySelector("#disp-grouplist");
+		panes.content = document.querySelector(".disp-content");
 		// Variable GUI elements
 		vartext.uidDisp = document.querySelector("#var-userid");
+		vartext.titleDisp = document.querySelector("#var-title");
 		// Add event listeners
 		btns.listDrawer.addEventListener("mouseup", function () {
 			if (panes.drawer.className == "disp-drawer expanding style-flex-c") {
@@ -91,6 +111,21 @@ document.addEventListener("readystatechange", function () {
 				panes.drawer.className = "disp-drawer expanding style-flex-c";
 			};
 			eleResize();
+		});
+		// Get the groups
+		Array.from(panes.groupList.children).forEach(function (e) {
+			e.addEventListener("click", function () {
+				switchTo(this);
+			});
+		});
+		// International
+		getConfig().then(function () {
+			// Load all groups
+			appConfig.group.list.forEach(function (e) {
+				addGroup(e.id, e.name);
+			});
+			// Click on default groupchat
+			panes.groupList.children[appConfig.group.default + 2].click();
 		});
 	};
 });
