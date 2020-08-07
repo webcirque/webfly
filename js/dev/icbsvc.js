@@ -15,10 +15,38 @@ var ICBMsg = function (user, msg, id, iniTime, modTime) {
 	this.iniTime = iniTime;
 	this.modTime = modTime;
 };
+var processMsg = function (text, upThis) {
+	var history = arguments[2] || false;
+	var parseSender = arguments[3] || false;
+	var tsp = new Date(), sender = arguments[4] || "Unknown Remote", msg = text;
+	var id = arguments[5] || genRandom(24);
+	var createdAt = arguments[6] || tsp;
+	var modAt = arguments[7] || tsp;
+	var splitIndex = text.indexOf(":");
+	if (text.indexOf("@") == 0 && splitIndex < 25 && parseSender) {
+		var legal = true;
+		Array.from(text.slice(1, splitIndex)).forEach(function (e) {
+			if (" -".indexOf(e.toLowerCase()) != -1) {
+				legal = false;
+			};
+		});
+		if (legal) {
+			sender = text.slice(1, splitIndex);
+			msg = text.slice(splitIndex + 1);
+		};
+	};
+	if (!history) {
+		upThis.receiveChat({sender: sender, msg: msg, time: tsp});
+	} else {
+		upThis.receiveHistory({sender: sender, msg: msg, time: tsp});
+	};
+	upThis.history.push(new ICBMsg(sender, msg, id, createdAt, modAt));
+};
 var ICBSvc = function (groupId, userId, config, receiver, options = {}) {
 	this.path = options.path || "/";
 	this.host = options.host || "cafechat.app";
 	this.history = [];
+	var connectTime = 0, failTime = 0;
 	var upThis = this;
 	if (Compard.able(groupId) < 1) {
 		throw Error("Invalid groupId");
@@ -31,6 +59,7 @@ var ICBSvc = function (groupId, userId, config, receiver, options = {}) {
 		this.config = config;
 	};
 	this.userId = userId || genRandom(12, config.user.randomizer);
+	this.verifiedUid = false;
 	if (config.info.realPath) {
 		this.path = location.pathname;
 	} else {
@@ -41,9 +70,14 @@ var ICBSvc = function (groupId, userId, config, receiver, options = {}) {
 	} else {
 		this.host = config.info.fakeHost;
 	};
-	this.receiver = receiver || function (data) {
+	this.receiveChat = receiver || function (data) {
 		console.log(data);
 	};
+	this.receiveHistory = function (data) {
+		console.log(data);
+	};
+	this.receiveConnect = function (data) {};
+	this.receiveDisconnect = function (data) {};
 	switch (config.server.protocol) {
 		case "safiullin": {
 			this.socket = new WebSocket(config.server.remote);
@@ -59,11 +93,13 @@ var ICBSvc = function (groupId, userId, config, receiver, options = {}) {
 				var msgJson = JSON.parse(event.data);
 				switch (msgJson.service) {
 					case "lastmes": {
+						msgJson.lastMess.reverse();
 						msgJson.lastMess.forEach(function (e) {
-							if (e.message.indexOf(upThis.userId + " ") != 0) {
-								upThis.history.push(new ICBMsg(
-									e.uid, e.message, e._id, new Date(e.createdAt), new Date(e.updatedAt)
-								));
+							if (e.message) {
+								if (e.message.indexOf(upThis.userId + " ") != 0) {
+									var cat = new Date(e.createdAt);
+									processMsg(e.message, upThis, true, true, e.uid, e._id, cat, new Date(e.updatedAt));
+								};
 							};
 						});
 						event.target.send(JSON.stringify({
@@ -74,10 +110,14 @@ var ICBSvc = function (groupId, userId, config, receiver, options = {}) {
 							"uid": upThis.userId,
 							"isRec": true
 						}));
+						upThis.receiveConnect({reconnect: connectTime});
 						break;
 					};
 					case "setUid": {
-						//
+						if (msgJson.message == upThis.userId) {
+							upThis.verifiedUid = true;
+							console.log("User ID verified");
+						};
 						break;
 					};
 					default : {
@@ -85,14 +125,10 @@ var ICBSvc = function (groupId, userId, config, receiver, options = {}) {
 					};
 				};
 			} catch (err) {
-				var tsp = new Date();
-				upThis.receiver({sender: "Unknown Remote", msg: event.data});
-				upThis.history.push(new ICBMsg("Unknown Remote", event.data, genRandom(24), tsp, tsp));
+				processMsg(event.data, upThis, false, true);
 			};
 		} else {
-			var tsp = new Date();
-			upThis.receiver({sender: "Unknown Remote", msg: event.data});
-			upThis.history.push(new ICBMsg("Unknown Remote", event.data, genRandom(24), tsp, tsp));
+			processMsg(event.data, upThis, false, true);
 		};
 	};
 	if (this.socket) {
@@ -122,37 +158,49 @@ var ICBSvc = function (groupId, userId, config, receiver, options = {}) {
 		};
 	};
 	this.send = function (msg, rec = true) {
-		var tsp = new Date();
-		this.socket.send(JSON.stringify({
-			"message": msg,
-			"host": this.host,
-			"pathname": this.path,
-			"g": this.groupId.toString(),
-			"uid": this.userId,
-			"isRec": rec
-		}));
-		if (rec) {
-			this.history.push(new ICBMsg(this.userId, msg, genRandom(24), tsp, tsp));
+		var tsp = new Date(), success = false;
+		if (this.socket.readyState == 1) {
+			success = true;
+			this.socket.send(JSON.stringify({
+				"message": msg,
+				"host": this.host,
+				"pathname": this.path,
+				"g": this.groupId.toString(),
+				"uid": this.userId,
+				"isRec": rec
+			}));
+			if (rec) {
+				this.history.push(new ICBMsg(this.userId, msg, genRandom(24), tsp, tsp));
+			};
 		};
+		return success;
 	};
 	this.reconnect = function () {
+		connectTime ++;
 		console.log("Keep-alive requested. Reconnecting...");
+		upThis.receiveDisconnect({reconnect: connectTime, fail: false});
 		upThis.socket = new WebSocket(config.server.remote);
-		upThis.socket.addEventListener("open", function () {
+		upThis.socket.addEventListener("open", function (ev) {
+			upThis.receiveConnect({reconnect: connectTime});
+			upThis.send(upThis.userId + " reconnected due to disconnection.");
 			console.log("Reconnected");
 		});
 		upThis.socket.addEventListener("error", function (ev) {
+			upThis.receiveDisconnect({reconnect: connectTime, fail: true});
 			console.log("Reconnection failed. Details: %o", ev);
 		});
 		upThis.socket.addEventListener("message", msgHandler);
 		this.socket.addEventListener("close", function () {
 			if (!upThis.closed) {
 				upThis.reconnect();
+			} else {
+				upThis.receiveDisconnect({reconnect: 0});
 			};
 		});
 	};
 	this.close = function () {
 		this.send(this.userId + " left the chat.", false);
+		upThis.receiveDisconnect({reconnect: connectTime, fail: false});
 		this.closed = true;
 		this.socket.close();
 	};

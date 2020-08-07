@@ -31,11 +31,13 @@
 		},
 		{
 			"id": "start",
-			"src": "feather/start.svg"
+			"src": "feather/start.svg",
+			"size": "~s"
 		},
 		{
 			"id": "stop",
-			"src": "feather/stop.svg"
+			"src": "feather/stop.svg",
+			"size": "~s"
 		},
 		{
 			"id": "send",

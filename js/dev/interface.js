@@ -51,12 +51,9 @@ var updVartext = function () {
 };
 // Switch tabs
 var switchTo = function (that) {
-	var idx = Array.from(panes.groupList.children).indexOf(that), kidx = idx;
-	if (kidx > 0) {
-		kidx -= 1;
-	};
+	var idx = Array.from(panes.groupList.children).indexOf(that);
 	Array.from(panes.content.children).forEach(function (e, i) {
-		(i == kidx) ? e.className = "disp-tab" : e.className = "disp-tab inactive-disp";
+		(i == idx) ? e.className = "disp-tab" : e.className = "disp-tab inactive-disp";
 	});
 	Array.from(panes.groupList.children).forEach(function (e, i) {
 		if (i == idx) {

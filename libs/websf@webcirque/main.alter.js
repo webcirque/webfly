@@ -161,6 +161,7 @@ try {
 	};
 	Compard = new Compard();
 } catch (err) {};
+
 // If a string has...
 String.prototype.withCount = function (args) {
 	var count = 0, copied = this.slice();
@@ -186,6 +187,41 @@ String.prototype.withAnyd = function () {
 String.prototype.withAlld = function () {
 	return (this.withCount(arguments) == arguments.length);
 };
+try {
+	String.prototype.parseMap = function () {
+		var upThis = this;
+		var decURI = arguments[1];
+		if (decURI == undefined) {
+			decURI = true;
+		};
+		var startChar = arguments[2] || "?";
+		var breakChar = arguments[3] || "&";
+		var assignChar = arguments[4] || "=";
+		var query = upThis.replace(startChar, "");
+		var valMap = new Map();
+		if (query.length) {
+			query = query.split(breakChar);
+			query.forEach(function (e, i, a) {
+				var key = "", value = "", valueYet = false;
+				Array.from(e).forEach(function (e2) {
+					if (!valueYet) {
+						if (e2 == assignChar) {
+							valueYet = true;
+						} else {
+							key += e2;
+						};
+					} else {
+						value += e2;
+					};
+				});
+				key = decodeURIComponent(key);
+				value = decodeURIComponent(value);
+				valMap.set(key, value);
+			});
+		};
+		return valMap;
+	};
+} catch (err) {};
 String.prototype.formText = function (map) {};
 
 // Why not use FileReader to polyfill .arrayBuffer and .text ?

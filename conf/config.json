@@ -29,5 +29,9 @@
 		"fakePath": "/index.html",
 		"realHost": true,
 		"fakeHost": "cafechat.app"
+	},
+	"upload": {
+		"type": "tab",
+		"href": "https://upload.disroot.org/"
 	}
 }

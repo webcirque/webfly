@@ -16,10 +16,10 @@
 <body>
 	<div class="float-left expanding">
 		<div class="disp-drawer expanding style-flex-c">
-			<div class="expanding">
+			<div class="expanding scrolling">
 				<ul id="disp-grouplist">
 					<li class="active" id="item-starttab">Start Tab</li>
-					<li><b id="item-groupchats">Group Chats</b></li>
+					<li>Upload Files</li>
 				</ul>
 			</div>
 			<div class="disp-uid expanding">
@@ -38,14 +38,13 @@
 					<img class="icon-menu"></img>
 				</div>
 				<div id="var-title">Start Tab</div>
-				<div id="btn-toggle">
-					<img class="icon-start"></img>
-					<img class="icon-stop inactive-icon"></img>
-				</div>
 			</div>
 			<div class="disp-content expanding">
 				<div class="disp-tab" id="tab-start">
-					<iframe src="start.htm" class="intab" id="win-start"></iframe>
+					<iframe src="start.htm" class="intab"></iframe>
+				</div>
+				<div class="disp-tab inactive-disp" id="tab-start">
+					<iframe src="upload.htm" class="intab"></iframe>
 				</div>
 			</div>
 		</div>

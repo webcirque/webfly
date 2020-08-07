@@ -12,19 +12,19 @@ div.float-left > * {
 	float: left;
 }
 
-div.style-flex, div.style-flex-c {
+.style-flex, .style-flex-c {
 	display: flex;
 }
-div.style-flex {
+.style-flex {
 	flex-direction: row;
 }
-div.style-flex > div {
+.style-flex > div {
 	height: 100%;
 }
-div.style-flex-c {
+.style-flex-c {
 	flex-direction: column;
 }
-div.style-flex-c > div {
+.style-flex-c > div {
 	width: 100%;
 }
 
@@ -73,6 +73,7 @@ div.disp-ctitle {
 	font-size: 20px;
 	font-weight: 700;
 	height: 32px;
+	line-height: 32px;
 }
 div.disp-ctitle div[id^=btn-]{
 	margin: 0 4px;
@@ -80,6 +81,24 @@ div.disp-ctitle div[id^=btn-]{
 div.disp-ctitle #var-title {
 	padding: 0px 3px !important;
 	width: 100%;
+	vertical-align: middle;
+	line-height: 32px;
+}
+
+.scrolling {
+	overflow: hidden;
+	overflow-y: scroll;
+}
+.scrolling::-webkit-scrollbar {
+	width: 8px;
+}
+.scrolling::-webkit-scrollbar-track {
+	background: rgba(255, 255, 255, 0.2);
+}
+.scrolling::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.75);
+	border: 0 solid;
+	border-radius: 2px;
 }
 
 div.disp-uid {

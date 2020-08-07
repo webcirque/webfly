@@ -5,7 +5,7 @@
 	<link rel="stylesheet" href="../css/loader/global.css" />
 	<link rel="stylesheet" href="../css/dev/interface.css" />
 	<link rel="stylesheet" href="../css/dev/chat.css" />
-	<title>WebFly</title>
+	<title>WebFly Chat UI</title>
 	<script src="../libs/websf@webcirque/main.alter.js"></script>
 	<script src="../libs/websf@webcirque/main.wenv.js"></script>
 	<script src="../libs/websf@webcirque/main.iconmgr.js"></script>
@@ -14,16 +14,27 @@
 	<meta content="true" name="HandheldFriendly" />
 	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
 </head>
-<body>
-	<div id="chat-history"></div>
-	<div id="input-area">
-		<div class="button" id="btn-attach">
-			<img class="icon-attachment" />
+<body class="style-flex-c">
+	<div id="chat-history" class="scrolling expanding">
+		<div class="history-entry systeminfo">
+			<div class="sender"><span class="sender-name">System Message</span><span class="sender-time">N/A</span></div>
+			<div class="msgcontent">Click the start button to start a conversation!</div>
 		</div>
-		<div class="expanding">
-			<textarea placeholder="Message" maxlength="500"></textarea>
+	</div>
+	<div id="input-area" class="expanding style-flex">
+		<div class="style-flex-c btnsink">
+			<div id="btn-toggle">
+				<img class="icon-start"></img>
+				<img class="icon-stop" style="display: none;"></img>
+			</div>
+			<div id="btn-attach">
+				<img class="icon-attachment" />
+			</div>
 		</div>
-		<div class="button" id="btn-send">
+		<div class="expanding inputbox">
+			<textarea placeholder="Message" class="scrolling" maxlength="500"></textarea>
+		</div>
+		<div class="btnsink" id="btn-send">
 			<img class="icon-send" />
 		</div>
 	</div>
