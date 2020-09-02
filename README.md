@@ -2,6 +2,9 @@
 Whole new implementation of Safiullin's Cafechat.app
 
 ## Status
+Because no one other than myself is willing to use this, so support for this has paused.
+
+Will resume support once gathered at least 2 suggestions or bug reports.
 
 ## Installing
 No server-side configuration required, because it is only a set of static files. It even works with only GitHub/GitLab Pages!
